@@ -222,8 +222,6 @@ async function placeOrder() {
 }
 
 
-
-
 async function uploadImage() {
     const fileInput = document.getElementById('imageUpload');
     const file = fileInput.files[0];

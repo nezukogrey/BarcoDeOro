@@ -186,6 +186,7 @@ async function placeOrder() {
             document.getElementById('checkoutSection').style.display = 'none';
 
             // ✅ Clear the uploaded image preview
+            document.getElementById('uploadSection').style.display = 'none';  // Hide the upload section
             document.getElementById('preview').innerHTML = '';  // Clears the preview area
             document.getElementById('imageUpload').value = '';  // Clears the file input
             document.getElementById('uploadedImageUrl').value = ''; // Clears stored image URL

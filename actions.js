@@ -152,7 +152,7 @@ async function placeOrder() {
     const orderNumber = 'ORD' + Math.floor(Math.random() * 1000000);
     document.getElementById('orderNumber').textContent = orderNumber;
 
-    const FORMSPREE_URL = "https://formspree.io/f/mdkazybk"; // ✅ Replace with correct Form ID
+    const FORMSPREE_URL = "https://formspree.io/f/mjkgrljl"; // ✅ Replace with correct Form ID
 
     const formData = {
         name: name,

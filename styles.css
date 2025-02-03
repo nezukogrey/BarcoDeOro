@@ -1,5 +1,10 @@
 /* Responsive Design */
 @media (max-width: 768px) {
+    #cartButton {
+        max-width: 100px; /* Smaller button on smaller screens */
+        font-size: 14px; /* Slightly smaller text */
+        padding: 8px 12px;
+    }
     nav ul li {
         display: block; /* Stack the navigation items on smaller screens */
         margin-top: 10px;

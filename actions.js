@@ -140,19 +140,38 @@ function displayOrderSummary() {
 
 //For Checkout.html 
 async function placeOrder() {
-    const name = document.getElementById('name').value;
-    const address = document.getElementById('address').value;
-    const email = document.getElementById('email').value;
-    const phone = document.getElementById('phone').value;
+    // Get input values
+    const name = document.getElementById('name').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
     const date = document.getElementById('date').value;
     const orderSummary = document.getElementById('orderSummary')?.innerText || "";
     const orderNotes = document.getElementById('orderDescription')?.value || "";
     const uploadedImageUrl = document.getElementById('uploadedImageUrl')?.value || ""; 
 
+    // ✅ Check for empty fields before submitting
+    if (!name || !address || !email || !phone) {
+        alert("⚠️ Please fill in all required fields: Name, Address, Email, and Phone.");
+        return;  // Stop submission if any required field is empty
+    }
+
+    // ✅ Validate phone number (must be 10 digits)
+    if (!/^\d{10}$/.test(phone)) {
+        alert("⚠️ Please enter a valid 10-digit phone number.");
+        return;
+    }
+
+    // ✅ Validate email format
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+        alert("⚠️ Please enter a valid email address.");
+        return;
+    }
+
     const orderNumber = 'ORD' + Math.floor(Math.random() * 1000000);
     document.getElementById('orderNumber').textContent = orderNumber;
 
-    const FORMSPREE_URL = "https://formspree.io/f/mjkgrljl"; // ✅ Replace with correct Form ID
+    const FORMSPREE_URL = "https://formspree.io/f/mdkazybk"; // ✅ Replace with your Formspree ID
 
     const formData = {
         name: name,
@@ -186,7 +205,6 @@ async function placeOrder() {
             document.getElementById('checkoutSection').style.display = 'none';
 
             // ✅ Clear the uploaded image preview
-            document.getElementById('uploadSection').style.display = 'none';  // Hide the upload section
             document.getElementById('preview').innerHTML = '';  // Clears the preview area
             document.getElementById('imageUpload').value = '';  // Clears the file input
             document.getElementById('uploadedImageUrl').value = ''; // Clears stored image URL
@@ -202,6 +220,7 @@ async function placeOrder() {
         alert("There was an error sending your order. Please check your connection and try again.");
     }
 }
+
 
 
 

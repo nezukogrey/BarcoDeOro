@@ -185,10 +185,15 @@ async function placeOrder() {
             document.getElementById('reviewOrder').style.display = 'none';
             document.getElementById('checkoutSection').style.display = 'none';
 
+            // ✅ Clear the uploaded image preview
+            document.getElementById('preview').innerHTML = '';  // Clears the preview area
+            document.getElementById('imageUpload').value = '';  // Clears the file input
+            document.getElementById('uploadedImageUrl').value = ''; // Clears stored image URL
+
             // ✅ Show only the confirmation message
             document.getElementById('orderConfirmation').style.display = 'block';
         } else {
-            console.error("❌Failed to send order:", response.statusText);
+            console.error("❌ Failed to send order:", response.statusText);
             alert("There was an error submitting your order. Please try again.");
         }
     } catch (error) {
@@ -196,6 +201,7 @@ async function placeOrder() {
         alert("There was an error sending your order. Please check your connection and try again.");
     }
 }
+
 
 
 async function uploadImage() {

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Menu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <img src="logo.jpg" alt="Barco De Oro" class="logo-image">
+        <h1>Welcome to Barco De Oro</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li> <button id="cartButton" onclick="toggleCartDisplay()">
+                <i class="fas fa-shopping-cart"></i> Cart
+            </button> </li>
+        </ul>
+        
+    </nav>
+
+    <div id="cart" style="display: none;">
+        <h2>Your Cart</h2>
+        <ul id="cartItems"></ul>
+        <p><span id="totalPrice">0</span></p>
+        <button id="checkoutButton" onclick="location.href='checkout.html'">Checkout</button>
+    </div>
+
+    <section id="cakes" class="name">
+        <h2>Custom Cakes</h2>
+        <div>
+            <label for="cakeSizeCakes">Size:</label>
+            <select id="cakeSizeCakes" class="size-select">
+                <option value="10 inch" data-price="45">10 inch - $45+ (up to 24 servings)</option>
+                <option value="8 inch" data-price="35">8 inch - $35+ (up to 16 servings) </option>
+                <option value="6 inch" data-price="25">6 inch - $25+ (up to 8 servings) </option>
+                <option value="5 inch" data-price="20">5 inch - $20+ (up to 2 servings)</option>
+            </select>
+        </div>
+        <div>
+            <label for="cakeFlavorCakes">Flavors:</label>
+            <select id="cakeFlavorCakes" class="flavor-select">
+                <option value="Vanilla">Vanilla</option>
+                <option value="Strawberry">Strawberry</option>
+                <option value="Red Velvet">Red Velvet</option>
+                <option value="Confetti">Confetti</option>
+                <option value="Chocolate">Chocolate</option>
+                <option value="Coconut">Coconut</option>
+                <option value="Marble">Marble</option>
+                <!-- More flavors -->
+            </select>
+        </div>
+        <div>
+            <label for="cakeToppingsCakes">Toppings:</label>
+            <div id="cakeToppingsCakes" class="topping-select">
+                <label><input type="checkbox" value="Bows"> Bows</label>
+                <label><input type="checkbox" value="Butterflies"> Butterflies</label>
+                <label><input type="checkbox" value="Chocolate Covered Strawberries"> Chocolate Covered Strawberries</label>
+                <label><input type="checkbox" value="Crowns"> Crowns</label>
+                <label><input type="checkbox" value="Drizzles"> Drizzles</label>
+                <label><input type="checkbox" value="Edible Image"> Edible Image</label>
+                <label><input type="checkbox" value="Sprinkles">Sprinkles</label>
+                <!-- More toppings -->
+            </div>
+        </div>
+        <button class="add-to-cart" data-section-id="cakes">Add to Cart</button>
+
+        <label for="orderDescription">Additional Notes:</label>
+        <label for="orderDescription">If you want a custom design just click size and flavor, and at checkout you will be able to write a description and add pictures.</label>
+
+
+
+    </section>
+
+    <section id="heartcakes" class="name">
+        <h2>Heart Cakes</h2>
+        <div>
+            <label for="cakeSizeCakes">Size:</label>
+            <select id="cakeSizeHeartCakes" class="size-select">
+                <option value="Heart Cake 8 inch" data-price="35">Heart Cake 8 inch - $35+ (12+ servings) </option>
+                <option value="Heart Cake 5 inch" data-price="20">Heart Cake 5 inch - $20+ (2 servings) </option>
+            </select>
+        </div>
+        <div>
+            <label for="cakeFlavorCakes">Flavors:</label>
+            <select id="cakeFlavorHeartCakes" class="flavor-select">
+                <option value="Vanilla">Vanilla</option>
+                <option value="Strawberry">Strawberry</option>
+                <option value="Red Velvet">Red Velvet</option>
+                <option value="Confetti">Confetti</option>
+                <option value="Chocolate">Chocolate</option>
+                <option value="Coconut">Coconut</option>
+                <option value="Marble">Marble</option>
+                <!-- More flavors -->
+            </select>
+        </div>
+        <div>
+            <label for="cakeToppingsCakes">Toppings:</label>
+            <div id="cakeToppingsHeartCakes" class="topping-select">
+                <label><input type="checkbox" value="Bows"> Bows</label>
+                <label><input type="checkbox" value="Butterflies"> Butterflies</label>
+                <label><input type="checkbox" value="Chocolate Covered Strawberries"> Chocolate Covered Strawberries</label>
+                <label><input type="checkbox" value="Crowns"> Crowns</label>
+                <label><input type="checkbox" value="Drizzles"> Drizzles</label>
+                <label><input type="checkbox" value="Edible Image"> Edible Image</label>
+                <label><input type="checkbox" value="Sprinkles">Sprinkles</label>
+                <!-- More toppings -->
+            </div>
+        </div>
+        <button onclick="addToCartFromSection('heartcakes')">Add Selected to Cart</button>
+
+        <label for="orderDescription">Additional Notes:</label>
+        <label for="orderDescription">If you want a custom design just click size and flavor, and at checkout you will be able to write a description and add pictures.</label>
+
+    </section>
+
+    <section id="cupcakes" class="name">
+        <h2>Custom Cupcakes</h2>
+        <div>
+            <label for="cakeSizeCakes">Size:</label>
+            <select id="cakeSizeCupakes" class="size-select">
+                <option value="24 Cupcakes" data-price="54">24 Cupcakes - $54+</option>
+                <option value="12 Cupcakes" data-price="28">12 Cupcakes - $28+</option>
+                <option value="6 Cupcakes" data-price="15">6 Cupcakes - $15+</option>
+            </select>
+        </div>
+        <div>
+            <label for="cakeFlavorCakes">Flavors:</label>
+            <select id="cakeFlavorCupcakes" class="flavor-select">
+                <option value="Vanilla">Vanilla</option>
+                <option value="Strawberry">Strawberry</option>
+                <option value="Red Velvet">Red Velvet</option>
+                <option value="Confetti">Confetti</option>
+                <option value="Chocolate">Chocolate</option>
+                <option value="Coconut">Coconut</option>
+                <option value="Marble">Marble</option>
+                <!-- More flavors -->
+            </select>
+        </div>
+        <div>
+            <label for="cakeToppingsCakes">Toppings:</label>
+            <div id="cakeToppingsCupcakes" class="topping-select">
+                <label><input type="checkbox" value="Bows"> Bows</label>
+                <label><input type="checkbox" value="Butterflies"> Butterflies</label>
+                <label><input type="checkbox" value="Chocolate Covered Strawberries"> Chocolate Covered Strawberries</label>
+                <label><input type="checkbox" value="Crowns"> Crowns</label>
+                <label><input type="checkbox" value="Drizzles"> Drizzles</label>
+                <label><input type="checkbox" value="Edible Image"> Edible Image</label>
+                <label><input type="checkbox" value="Sprinkles">Sprinkles</label>
+                <!-- More toppings -->
+            </div>
+        </div>
+        <button onclick="addToCartFromSection('cupcakes')">Add Selected to Cart</button>
+
+        <label for="orderDescription">Additional Notes:</label>
+        <label for="orderDescription">If you want a custom design just click size and flavor, and at checkout you will be able to write a description and add pictures.</label>
+    </section>
+
+    <section id="bentobox" class="name">
+        <h2>Bento Box</h2>
+        <div>
+            <label for="cakeSizeCakes">Size:</label>
+            <select id="cakeSizeBentoBox" class="size-select">
+                <option value="5 inch 2 Cupcakes" data-price="25">5 inch 2 Cupcakes- $25+ (4 Servings)</option>
+            </select>
+        </div>
+        <div>
+            <label for="cakeFlavorCakes">Flavors:</label>
+            <select id="cakeFlavorBentoBox" class="flavor-select">
+                <option value="Vanilla">Vanilla</option>
+                <option value="Strawberry">Strawberry</option>
+                <option value="Red Velvet">Red Velvet</option>
+                <option value="Confetti">Confetti</option>
+                <option value="Chocolate">Chocolate</option>
+                <option value="Coconut">Coconut</option>
+                <option value="Marble">Marble</option>
+                <!-- More flavors -->
+            </select>
+        </div>
+        <div>
+            <label for="cakeToppingsCakes">Toppings:</label>
+            <div id="cakeToppingsBentoBox" class="topping-select">
+                <label><input type="checkbox" value="Bows"> Bows</label>
+                <label><input type="checkbox" value="Butterflies"> Butterflies</label>
+                <label><input type="checkbox" value="Chocolate Covered Strawberries"> Chocolate Covered Strawberries</label>
+                <label><input type="checkbox" value="Crowns"> Crowns</label>
+                <label><input type="checkbox" value="Drizzles"> Drizzles</label>
+                <label><input type="checkbox" value="Edible Image"> Edible Image</label>
+                <label><input type="checkbox" value="Sprinkles">Sprinkles</label>
+                <!-- More toppings -->
+            </div>
+        </div>
+        <button onclick="addToCartFromSection('bentobox')">Add Selected to Cart</button>
+
+        <label for="orderDescription">Additional Notes:</label>
+        <label for="orderDescription">If you want a custom design just click size and flavor, and at checkout you will be able to write a description and add pictures.</label>
+    </section>
+
+    <section id="cakepops" class="name">
+        <h2>Custom Cakepops</h2>
+        <div>
+            <label for="cakepop-quantity">Qty:</label>
+            <input type="number" id="cakepop-quantity" min="1" value="1">
+            </select>
+        </div>
+        <div>
+            <label for="cakeFlavorCakes">Flavors:</label>
+            <select id="cakeFlavorCakepops" class="flavor-select">
+                <option value="Vanilla">Vanilla</option>
+                <option value="Strawberry">Strawberry</option>
+                <option value="Red Velvet">Red Velvet</option>
+                <option value="Confetti">Confetti</option>
+                <option value="Chocolate">Chocolate</option>
+                <option value="Coconut">Coconut</option>
+                <option value="Marble">Marble</option>
+                <!-- More flavors -->
+            </select>
+        </div>
+        <div>
+            <label for="cakeToppingsCakes">Toppings:</label>
+            <div id="cakeToppingsCakepops" class="topping-select">
+                <label><input type="checkbox" value="Bows"> Bows</label>
+                <label><input type="checkbox" value="Butterflies"> Butterflies</label>
+                <label><input type="checkbox" value="Crowns"> Crowns</label>
+                <label><input type="checkbox" value="Drizzles"> Drizzles</label>
+                <label><input type="checkbox" value="Sprinkles">Sprinkles</label>
+                <!-- More toppings -->
+            </div>
+        </div>
+        <button onclick="addToCartFromSection('cakepops')">Add Selected to Cart</button>
+
+        <label for="orderDescription">Additional Notes:</label>
+        <label for="orderDescription">If you want a custom design just click Qty and flavor, and at checkout you will be able to write a description and add pictures.</label>
+    </section>
+
+    <!-- Repeat the section structure for other categories like Cupcakes, Chocolates, etc. -->
+    <!-- Ensure IDs are unique for each select and input group -->
+
+
+    
+    <script src="actions.js"></script>
+</body>
+</html>

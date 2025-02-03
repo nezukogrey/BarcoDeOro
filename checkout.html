@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link rel="stylesheet" href="checkout.css">
+
+</head>
+<body>
+    <h1>Checkout</h1>
+
+    <!-- ✅ Review Order Section -->
+    <section id="reviewOrder">
+        <h2>Review Your Order</h2>
+        <div id="orderSummary"></div>
+    </section>
+    
+    <!-- ✅ Checkout Form Section -->
+    <section id="checkoutSection">
+        <h2>Enter Your Information</h2>
+        <form id="checkoutForm">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required><br>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            <label for="phone">Phone:</label>
+            <input type="phone" id="phone" name="phone" required><br>
+            <label for="date">Date Needed:</label>
+            <input type="date" id="date" name="date" required><br>
+            <button type="button" onclick="placeOrder()">Place Order</button>
+        </form>
+    </section>
+    
+    <!-- ✅ Order Confirmation (Initially Hidden) -->
+    <div id="orderConfirmation" style="display:none;">
+        <h1>Thank you for your order!</h1>
+        <h2>We will contact you to confirm order and pricing.</h2>
+        <p>Your order number is: <span id="orderNumber"></span></p>
+    </div>
+
+    <!-- ✅ Image Upload Section -->
+    <section id="uploadSection">
+        <form id="uploadForm">
+            <label>If you selected "Yes" on Custom Cake or Edible Image, please upload your images and description below.</label>
+            <label for="orderDescription">Additional Notes:</label>
+            <textarea id="orderDescription" name="orderDescription" rows="4" placeholder="Enter any special requests or details..."></textarea><br>
+            <label for="imageUpload">Upload your image:</label>
+            <input type="file" id="imageUpload" name="image" accept="image/jpeg, image/png, image/gif">
+            <button type="button" onclick="uploadImage()">Upload Image</button>
+            <input type="hidden" id="uploadedImageUrl" name="uploadedImageUrl">
+        </form>
+    </section>
+
+    <div id="preview"></div>
+
+    <script src="actions.js"></script>
+</body>
+
+</html>
+

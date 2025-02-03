@@ -1,0 +1,162 @@
+/* Basic reset to remove padding, margin, and set box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif; /* Ensures the font is consistent */
+}
+
+.logo-image {
+    height: 100px;
+}
+
+body {
+    background-color: #fffef0; /* A light cream background */
+    color: #333; /* Dark grey text for readability */
+    line-height: 1.6;
+    padding: 20px;
+}
+
+header, footer {
+    background-color: #f8f8f8; /* Light grey background for header and footer */
+    padding: 10px 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    background-color: #eee; /* Slightly darker grey for navigation */
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline; /* Display nav items in a row */
+    margin: 0 10px;
+}
+
+nav a {
+    text-decoration: none;
+    color: black;
+}
+
+button {
+    background-color: black; /* A deep teal background */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0a9396; /* A lighter teal for hover effect */
+}
+
+/* Styling for sections */
+section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: pink; /* A pale gold background for sections */
+    border-radius: 8px; /* Rounded corners for sections */
+}
+
+h2 {
+    color: #3d405b; /* Dark blue for headings */
+}
+
+/* Dropdown and Checkbox */
+select, input[type="number"] {
+    width: 100%; /* Full width for select boxes and number inputs */
+    padding: 8px;
+    margin-top: 5px; /* Space above the form element */
+    border-radius: 4px;
+    border: 1px solid #ccc; /* Light grey border */
+}
+
+label {
+    display: block; /* Each label on a new line */
+    margin-top: 15px; /* Spacing above each label */
+}
+
+input[type="checkbox"] {
+    margin-right: 5px; /* Space between checkbox and its label */
+}
+
+/* Styling checkboxes to appear next to their labels */
+label > input[type="checkbox"] {
+    vertical-align: middle;
+}
+
+/* Cart */
+#cart {
+    position: fixed;      /* Fixed positioning to stay in place on the screen */
+    top: 0;               /* Align to the top */
+    right: 0;             /* Align to the right */
+    width: 300px;         /* Set a fixed width */
+    height: 100vh;        /* Full viewport height */
+    background-color: white;
+    border-left: 1px solid #ccc;  /* A light border on the left */
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);  /* Shadow to the left */
+    z-index: 1000;        /* Ensure it's on top of other content */
+    display: none;        /* Initially hidden */
+    overflow-y: auto;     /* Enable scrolling */
+    padding: 20px;
+}
+
+button.delete-button {
+    background: none;
+    border: none;
+    color: red; /* Makes the icon red */
+    cursor: pointer; /* Changes the cursor to a pointer to indicate it's clickable */
+}
+
+button.delete-button:hover {
+    color: darkred; /* Darkens the icon on hover for better user interaction feedback */
+}
+
+/* ✅ Ensure Upload Form is Visible Initially */
+#uploadForm {
+    display: block; /* Ensures form is visible */
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Hide Upload Form After Order is Placed */
+#uploadForm.hidden {
+    display: none !important; /* This class will be added via JavaScript */
+}
+
+
+/* ✅ Style the Description Box */
+textarea {
+    width: 100%;
+    max-width: 500px;
+    height: 80px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    resize: none; /* Prevent resizing */
+}
+
+textarea:focus {
+    border-color: #555;
+    outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav ul li {
+        display: block; /* Stack the navigation items on smaller screens */
+        margin-top: 10px;
+    }
+
+    button, select, input[type="number"] {
+        width: 100%; /* Full width for better mobile usability */
+    }
+}
+
+

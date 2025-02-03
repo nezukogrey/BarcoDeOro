@@ -12,16 +12,16 @@
         <img src="logo.jpg" alt="Barco De Oro" class="logo-image">
         <h1>Welcome to Barco De Oro</h1>
     </header>
-    <nav>
-        <ul>
+    <nav class="navbar">
+        <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="gallery.html">Gallery</a></li>
-            <li> <button id="cartButton" onclick="toggleCartDisplay()">
-                <i class="fas fa-shopping-cart"></i> Cart
-            </button> </li>
         </ul>
-        
+        <button id="cartButton" onclick="toggleCartDisplay()">
+            <i class="fas fa-shopping-cart"></i> Cart
+        </button>
     </nav>
+    
 
     <div id="cart" style="display: none;">
         <h2>Your Cart</h2>

@@ -9,93 +9,146 @@ const sectionNameMap = {
     "bentobox": "Bento Box"
 };
 
-// Function to toggle the display of the cart
 function toggleCartDisplay() {
     const cartElement = document.getElementById('cart');
-    cartElement.style.display = cartElement.style.display === 'none' ? 'block' : 'none';
-    renderCartItems();  // Update the cart display whenever it is toggled
+
+    // ✅ Toggle visibility
+    if (cartElement.style.display === 'none' || cartElement.style.display === '') {
+        cartElement.style.display = 'block';
+        document.addEventListener('click', closeCartOnClickOutside); // ✅ Listen for outside clicks
+    } else {
+        cartElement.style.display = 'none';
+        document.removeEventListener('click', closeCartOnClickOutside); // ✅ Remove event listener
+    }
 }
 
-// Function to add items to the cart from a specific section
+function closeCartOnClickOutside(event) {
+    const cartElement = document.getElementById('cart');
+    const cartButton = document.getElementById('cartButton');
+
+    // ✅ Check if the click is on the delete button
+    if (event.target.closest('.delete-button')) {
+        return; // Ignore clicks on delete buttons
+    }
+
+    // ✅ Check if click is outside the cart and not on the cart button
+    if (!cartElement.contains(event.target) && event.target !== cartButton) {
+        cartElement.style.display = 'none';
+        document.removeEventListener('click', closeCartOnClickOutside);
+    }
+}
+
+
+//  Function to load cart items from localStorage
+function loadCartFromLocalStorage() {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    if (storedCart.length > 0) {
+        cart = storedCart;
+        renderCartItems();
+    }
+}
+
 function addToCartFromSection(sectionId) {
     const section = document.getElementById(sectionId);
-    const sizeSelect = section.querySelector('.size-select'); // Only exists for cakes
-    const flavorSelect = section.querySelector('.flavor-select'); // Exists for cakes & cake pops
+    const sizeSelect = section.querySelector('.size-select');
+    const flavorSelect = section.querySelector('.flavor-select');
     const toppingChecks = section.querySelectorAll('.topping-select input[type="checkbox"]:checked');
-    const quantityInput = section.querySelector('input[type="number"]'); // For Cake Pops
+    const quantityInput = section.querySelector('input[type="number"]'); // For quantity-based items
+
+    const toppings = Array.from(toppingChecks).map(input => input.value).join(', ');
 
     let price = 0;
-    //let name = "Unknown Item";
-    let name = sectionNameMap[sectionId] || "Unknown Item"; // Get name from section ID
-    let quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1; // Get quantity from input
+    let quantity = 1;
+    
+    // Use sectionNameMap to get the readable name (Cake, Cupcake, etc.)
+    let name = sectionNameMap[sectionId] || sectionId.replace(/-/g, ' ');
 
-
+    //  If a flavor is selected, include it in the item name
     if (flavorSelect) {
         name = `${flavorSelect.options[flavorSelect.selectedIndex].text} ${name}`;
     }
 
-    // Check if this section is for Cake Pops
-    if (sectionId === "cakepops") {
-        price = 2.00; // Fixed price per Cake Pop
-    } else if (sizeSelect) {
-        // Standard cakes logic
-        price = parseFloat(sizeSelect.options[sizeSelect.selectedIndex]?.getAttribute('data-price')) || 0;
-    } else {
-        console.error("No valid pricing information found for section:", sectionId);
-        return;
+    if (quantityInput) {
+        quantity = parseInt(quantityInput.value) || 1;
     }
 
-    const toppings = Array.from(toppingChecks).map(input => input.value).join(', ');
+    if (sizeSelect) {
+        price = parseFloat(sizeSelect.options[sizeSelect.selectedIndex]?.getAttribute('data-price')) || 0;
+    } else {
+        price = 2.00 * quantity; // Example for cake pops
+    }
 
     const item = {
-        id: cart.length + 1,
-        name: name,
-        size: sizeSelect ? sizeSelect.value : "N/A", // Only relevant for cakes
+        id: new Date().getTime(), // Unique ID
+        name: name, //includes both the flavor and section name
         toppings: toppings,
         price: price,
         quantity: quantity
     };
 
-    console.log("Adding item to cart:", item);
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
     cart.push(item);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    renderCartItems();
+    localStorage.setItem('cart', JSON.stringify(cart)); // 
+
+    renderCartItems(); // Refresh cart display
 }
 
 
-// Function to render cart items in the UI
 function renderCartItems() {
     const cartItems = document.getElementById('cartItems');
-    cartItems.innerHTML = '';  // Clear existing items
+    const totalPrice = document.getElementById('totalPrice');
+    
+    cartItems.innerHTML = ''; 
     let total = 0;
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || []; // Load updated cart from storage
 
     cart.forEach(item => {
         const itemNode = document.createElement('li');
-        itemNode.textContent = `${item.quantity}x ${item.name} - ${item.toppings ? item.toppings : "No toppings"} - $${(item.price * item.quantity).toFixed(2)}`;
+        itemNode.textContent = `${item.quantity}x ${item.name} - ${item.toppings || "No toppings"} - $${(item.price * item.quantity).toFixed(2)}`;
 
+        // Create a delete button
         const deleteButton = document.createElement('button');
-        deleteButton.innerHTML = '<i class="fas fa-trash"></i>';  // Using Font Awesome icon
-        deleteButton.onclick = function() { removeFromCart(item.id); };
-        deleteButton.className = 'delete-button';  // Optional: Assign a class for styling
+        deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteButton.onclick = function () { 
+            removeFromCart(item.id); 
+        };
+        deleteButton.className = 'delete-button';
+        
         itemNode.appendChild(deleteButton);
-
         cartItems.appendChild(itemNode);
+        
         total += item.price * item.quantity;
     });
 
     // Update total price
-    const totalPrice = document.getElementById('totalPrice');
-    totalPrice.textContent = `Estimated Total: $${total.toFixed(2)}`;
+    totalPrice.textContent = `Total: $${total.toFixed(2)}`;
 }
 
-// Function to remove item from cart
+
 function removeFromCart(itemId) {
-    const index = cart.findIndex(item => item.id === itemId);
-    if (index > -1) {
-        cart.splice(index, 1);  // Remove the item from the array
-        renderCartItems();  // Re-render the cart items
-    }
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+    // Filter out the item to be removed
+    cart = cart.filter(item => item.id !== itemId);
+
+    // Update localStorage with the new cart
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    // Refresh the cart display
+    renderCartItems();
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadCartFromLocalStorage();
+});
+
+function loadCartFromLocalStorage() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    renderCartItems();
+}
+
 
 // Display order summary on the checkout page
 function displayOrderSummary() {
@@ -150,19 +203,19 @@ async function placeOrder() {
     const orderNotes = document.getElementById('orderDescription')?.value || "";
     const uploadedImageUrl = document.getElementById('uploadedImageUrl')?.value || ""; 
 
-    // ✅ Check for empty fields before submitting
+    // Check for empty fields before submitting
     if (!name || !address || !email || !phone) {
         alert("⚠️ Please fill in all required fields: Name, Address, Email, and Phone.");
         return;  // Stop submission if any required field is empty
     }
 
-    // ✅ Validate phone number (must be 10 digits)
+    // Validate phone number (must be 10 digits)
     if (!/^\d{10}$/.test(phone)) {
         alert("⚠️ Please enter a valid 10-digit phone number.");
         return;
     }
 
-    // ✅ Validate email format
+    // Validate email format
     if (!/^\S+@\S+\.\S+$/.test(email)) {
         alert("⚠️ Please enter a valid email address.");
         return;
@@ -171,7 +224,7 @@ async function placeOrder() {
     const orderNumber = 'ORD' + Math.floor(Math.random() * 1000000);
     document.getElementById('orderNumber').textContent = orderNumber;
 
-    const FORMSPREE_URL = "https://formspree.io/f/mdkazybk"; // ✅ Replace with your Formspree ID
+    const FORMSPREE_URL = "https://formspree.io/f/mdkazybk"; // Replace with your Formspree ID
 
     const formData = {
         name: name,
@@ -195,21 +248,21 @@ async function placeOrder() {
         });
 
         if (response.ok) {
-            console.log("✅ Order sent to Formspree successfully!");
+            console.log("Order sent to Formspree successfully!");
 
-            // ✅ Hide all sections except the order confirmation
+            // Hide all sections except the order confirmation
             document.getElementById('checkoutForm').style.display = 'none';
             document.getElementById('uploadForm').style.display = 'none';
             document.getElementById('orderSummary').style.display = 'none';
             document.getElementById('reviewOrder').style.display = 'none';
             document.getElementById('checkoutSection').style.display = 'none';
 
-            // ✅ Clear the uploaded image preview
+            // Clear the uploaded image preview
             document.getElementById('preview').innerHTML = '';  // Clears the preview area
             document.getElementById('imageUpload').value = '';  // Clears the file input
             document.getElementById('uploadedImageUrl').value = ''; // Clears stored image URL
 
-            // ✅ Show only the confirmation message
+            // Show only the confirmation message
             document.getElementById('orderConfirmation').style.display = 'block';
         } else {
             console.error("❌ Failed to send order:", response.statusText);
@@ -250,7 +303,7 @@ async function uploadImage() {
 
         if (result.success) {
             console.log("✅ Image uploaded successfully:", result.data.link);
-            document.getElementById('uploadedImageUrl').value = result.data.link; // ✅ Store image URL
+            document.getElementById('uploadedImageUrl').value = result.data.link; // Store image URL
         } else {
             console.error("❌ Upload failed:", result);
             alert("Image upload failed. Try again.");

@@ -188,7 +188,7 @@ async function placeOrder() {
             // ✅ Show only the confirmation message
             document.getElementById('orderConfirmation').style.display = 'block';
         } else {
-            console.error("❌ Failed to send order:", response.statusText);
+            console.error("❌Failed to send order:", response.statusText);
             alert("There was an error submitting your order. Please try again.");
         }
     } catch (error) {

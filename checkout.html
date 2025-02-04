@@ -30,6 +30,13 @@
             <input type="phone" id="phone" name="phone" required><br>
             <label for="date">Date Needed:</label>
             <input type="date" id="date" name="date" required><br>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    let today = new Date().toISOString().split("T")[0];
+                    document.getElementById("date").setAttribute("min", today);
+                });
+            </script>
+            
             <button type="button" onclick="placeOrder()">Place Order</button>
         </form>
     </section>

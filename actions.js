@@ -198,7 +198,8 @@ async function placeOrder() {
     const address = document.getElementById('address').value.trim();
     const email = document.getElementById('email').value.trim();
     const phone = document.getElementById('phone').value.trim();
-    const date = document.getElementById('date').value;
+    const dateInput = document.getElementById('date').value;
+    const today = new Date().toISOString().split("T")[0];
     const orderSummary = document.getElementById('orderSummary')?.innerText || "";
     const orderNotes = document.getElementById('orderDescription')?.value || "";
     const uploadedImageUrl = document.getElementById('uploadedImageUrl')?.value || ""; 
@@ -221,6 +222,11 @@ async function placeOrder() {
         return;
     }
 
+    if (dateInput < today) {
+        alert("⚠️ You cannot select a past date. Please pick a valid date.");
+        return; // Stop submission
+    }
+
     const orderNumber = 'ORD' + Math.floor(Math.random() * 1000000);
     document.getElementById('orderNumber').textContent = orderNumber;
 
@@ -231,7 +237,7 @@ async function placeOrder() {
         address: address,
         email: email,
         phone: phone,
-        date: date,
+        date: dateInput,
         orderSummary: orderSummary,
         orderNotes: orderNotes,
         orderNumber: orderNumber,

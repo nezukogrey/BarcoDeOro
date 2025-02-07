@@ -66,11 +66,9 @@ function addToCartFromSection(sectionId) {
 
     let price = 0;
     let quantity = 1;
-    
-    // Use sectionNameMap to get the readable name (Cake, Cupcake, etc.)
+
     let name = sectionNameMap[sectionId] || sectionId.replace(/-/g, ' ');
 
-    //  If a flavor is selected, include it in the item name
     if (flavorSelect) {
         name = `${flavorSelect.options[flavorSelect.selectedIndex].text} ${name}`;
     }
@@ -82,67 +80,76 @@ function addToCartFromSection(sectionId) {
     if (sizeSelect) {
         price = parseFloat(sizeSelect.options[sizeSelect.selectedIndex]?.getAttribute('data-price')) || 0;
     } else {
-        price = 2.00 * quantity; // Example for cake pops
+        price = 2.00; // ✅ Store the unit price, NOT multiplied by quantity
     }
 
     const item = {
-        id: new Date().getTime(), // Unique ID
-        name: name, //includes both the flavor and section name
+        id: new Date().getTime(),
+        name: name,
         toppings: toppings,
-        price: price,
+        price: price,  // ✅ Keep price as UNIT price
         quantity: quantity
     };
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     cart.push(item);
-    localStorage.setItem('cart', JSON.stringify(cart)); // 
+    localStorage.setItem('cart', JSON.stringify(cart)); 
 
-    renderCartItems(); // Refresh cart display
+    renderCartItems(); 
 }
 
 
 function renderCartItems() {
-    const cartItems = document.getElementById('cartItems');
-    const totalPrice = document.getElementById('totalPrice');
+    const cartItemsContainer = document.getElementById('cartItems');
+    const totalPriceElement = document.getElementById('totalPrice');
 
-    // Check if elements exist before running the function
-    if (!cartItems || !totalPrice) {
+    if (!cartItemsContainer || !totalPriceElement) {
         console.warn("⚠️ Cart elements not found. Skipping renderCartItems().");
         return;
     }
 
-    cartItems.innerHTML = ''; 
+    cartItemsContainer.innerHTML = ''; 
     let total = 0;
-    let cart = JSON.parse(localStorage.getItem('cart')) || []; // Load updated cart from storage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
     if (cart.length === 0) {
-        // ✅ Show empty cart message if no items
-        cartItems.innerHTML = `<p class="empty-cart-message">Your cart is empty.</p>`;
-        totalPrice.textContent = `Estimated Total: $0.00`;
-        return;
+        cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+    } else {
+        cart.forEach(item => {
+            let pricePerItem = parseFloat(item.price);  // ✅ Ensure it's a number
+            let itemTotalPrice = pricePerItem * item.quantity;
+
+            console.log(`DEBUG: ${item.quantity}x ${item.name}, Price Per Item: $${pricePerItem}, Total: $${itemTotalPrice}`);
+
+            const itemNode = document.createElement('li');
+            itemNode.className = 'cart-item';
+
+            const itemText = document.createElement('p');
+            itemText.textContent = `${item.quantity}x ${item.name} - ${item.toppings || "No toppings"}`;
+
+            const priceText = document.createElement('p');
+            priceText.textContent = `- $${itemTotalPrice.toFixed(2)}`;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i> Remove';
+            deleteButton.onclick = function () { 
+                removeFromCart(item.id); 
+            };
+            deleteButton.className = 'delete-button';
+
+            itemNode.appendChild(itemText);
+            itemNode.appendChild(priceText);
+            itemNode.appendChild(deleteButton);
+            cartItemsContainer.appendChild(itemNode); 
+
+            total += itemTotalPrice;  // ✅ Ensure correct total calculation
+        });
     }
 
-    cart.forEach(item => {
-        const itemNode = document.createElement('li');
-        itemNode.textContent = `${item.quantity}x ${item.name} - ${item.toppings || "No toppings"} - $${(item.price * item.quantity).toFixed(2)}`;
-
-        // Create a delete button
-        const deleteButton = document.createElement('button');
-        deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-        deleteButton.onclick = function () { 
-            removeFromCart(item.id); 
-        };
-        deleteButton.className = 'delete-button';
-
-        itemNode.appendChild(deleteButton);
-        cartItems.appendChild(itemNode);
-
-        total += item.price * item.quantity;
-    });
-
-    // Update total price
-    totalPrice.textContent = `Estimated Total: $${total.toFixed(2)}`;
+    totalPriceElement.textContent = `Estimated Total: $${total.toFixed(2)}`;
 }
+
+
 
 function removeFromCart(itemId) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];

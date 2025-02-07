@@ -259,13 +259,15 @@ label > input[type="checkbox"] {
     background-color: #444;
 }
 
-#cartItems {
-    list-style-position: inside; /* Ensures bullet points stay inside the container */    
+/* Style each cart item */
+.cart-item {
+    display: flex;      /* ✅ Keeps bullet point */
+    list-style-position: inside;
+    flex-direction: column;  /* ✅ Keeps text & button stacked */
+    align-items: flex-start;
+    margin-bottom: 15px;
 }
 
-#cartItems li {
-    padding-left: 10px; /* Adds more space between bullet points and text */
-}
 
 /* Ensure total price and checkout button are aligned properly */
 .cart-footer {
@@ -297,6 +299,20 @@ label > input[type="checkbox"] {
 }
 #checkoutButton:hover {
     background-color: green;
+}
+
+.delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between trash icon and text */
+    border-radius: 5px;
+    margin-top: 5px; /* Space between text and button */
 }
 
 button.delete-button {

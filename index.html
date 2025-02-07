@@ -3,31 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cafe Menu</title>
+    <title>Barco De Oro Treats & Treasures</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-    <header>
-        <img src="logo.jpg" alt="Barco De Oro" class="logo-image">
-        <h1>Welcome to Barco De Oro</h1>
-    </header>
-    <nav class="navbar">
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-        </ul>
-        <button id="cartButton" onclick="toggleCartDisplay()">
-            <i class="fas fa-shopping-cart"></i> Cart
-        </button>
-    </nav>
+    <header id="header-container">
+        <div class="header-top">
+            <h1 class="header-text">Barco De Oro</h1>
+            <img src="logo.jpg" alt="Barco De Oro Logo" class="logo-image">
+            <h1 class="header-text">Treats & Treasures</h1>
+        </div>
     
-
-    <div id="cart" style="display: none;">
+        <nav id="navbar">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+            </ul>
+    
+            <button id="cartButton" onclick="toggleCartDisplay()">
+                <i class="fas fa-shopping-cart"></i> Cart
+            </button>
+        </nav>
+    </header>
+    
+    
+    <div id="cart" class="cart-container">
+        <button id="closeCart" class="close-cart">&times;</button>  <!-- ✖ Close button -->
         <h2>Your Cart</h2>
         <ul id="cartItems"></ul>
-        <p><span id="totalPrice">0</span></p>
-        <button id="checkoutButton" onclick="location.href='checkout.html'">Checkout</button>
+        <div class="cart-footer"> 
+            <p><span id="totalPrice">Estimated Total: $0</span></p>
+            <button id="checkoutButton" onclick="location.href='checkout.html'">Checkout</button>
+        </div>
+        
     </div>
 
     <section id="messages">
@@ -210,7 +220,7 @@
     </section>
 
     <section id="cakepops" class="name">
-        <h2>Custom Cakepops</h2>
+        <h2>Custom Cakepops $2+</h2>
         <div>
             <label for="cakepop-quantity">Qty:</label>
             <input type="number" id="cakepop-quantity" min="1" value="1">

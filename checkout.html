@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Page</title>
     <link rel="stylesheet" href="checkout.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
 
 </head>
 <body>
@@ -55,10 +57,18 @@
             <label>Custom design or Edible Image, please upload your images and description below.</label>
             <label for="orderDescription">Additional Notes:</label>
             <textarea id="orderDescription" name="orderDescription" rows="4" placeholder="Enter any special requests or details..."></textarea><br>
-            <label for="imageUpload">Upload your image:</label>
-            <input type="file" id="imageUpload" name="image" accept="image/jpeg, image/png, image/gif">
-            <button type="button" onclick="uploadImage()">Upload Image</button>
-            <input type="hidden" id="uploadedImageUrl" name="uploadedImageUrl">
+            <label for="imageUpload">Upload your images:</label>
+            <input type="file" id="imageUpload" name="images" accept="image/jpeg, image/png, image/gif" multiple>
+            <button type="button" onclick="uploadImages()">Upload Images</button>
+
+            <!-- ✅ This div will display the uploaded images -->
+            <div id="preview" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+            <!--<textarea id="uploadedImageUrls" name="uploadedImageUrls" rows="4" placeholder="Uploaded image URLs will appear here..." readonly></textarea>-->
+            <!-- ✅ Show upload success messages -->
+            <div id="uploadStatus" style="margin-top: 10px;"></div>
+
+            <textarea id="uploadedImageUrls" name="uploadedImageUrls" style="display: none;"></textarea>
+
         </form>
     </section>
 

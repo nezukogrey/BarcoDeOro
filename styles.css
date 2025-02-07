@@ -39,35 +39,77 @@ header, footer {
     text-align: center;
 }
 
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: space-between; /* Distributes items evenly */
-    align-items: center;
-    background-color: #f2f2f2;
-    padding: 10px;
+/* Make the entire header flexbox for alignment */
+#header-container {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
+    z-index: 1000;
+    background-color: #fffef0;
+    transition: top 0.3s ease-in-out; /* Smooth movement */
 }
 
-.navbar ul {
-    list-style-type: none;
+/* Center logo and text */
+.header-top {
     display: flex;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Adjust spacing between text and logo */
+    padding: 15px 0;
 }
 
-.navbar li {
-    display: inline;
+/* Adjust logo size */
+.logo-image {
+    width: 90px; /* Adjust as needed */
+    height: auto;
 }
 
-.navbar a {
-    text-decoration: none;
+/* Style header text */
+.header-text {
     color: black;
-    font-size: 16px;
+    font-size: 28px;
     font-weight: bold;
 }
 
+/* Navbar positioned below */
+#navbar {
+    display: flex;
+    justify-content: space-between; /* Keep items spaced */
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: pink; /* Navbar background */
+}
+
+/* Navigation links on the left */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    padding: 0;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+
+/* Cart Button stays on the right */
+#cartButton {
+    background-color: pink;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
 
 button {
     background-color: black; /* A deep teal background */
@@ -117,18 +159,41 @@ label > input[type="checkbox"] {
 }
 
 /* Cart */
-#cart {
-    display: none; /* ✅ Hide cart initially */
-    position: absolute;
-    right: 20px;
-    top: 50px;
+.cart-container {
+    position: fixed;
+    top: 0;
+    right: -350px; /* Start hidden */
+    width: 350px;
+    height: 100%;
     background: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    overflow-y: auto;
+    transition: right 0.3s ease-in-out;
     z-index: 1000;
 }
 
+.cart-container.show {
+    right: 0; /* Slide in */
+}
+
+.close-cart {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    color: black; /* Change to black or any visible color */
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+}
+
+.close-cart:hover {
+    color: red; /* Change color on hover for better UX */
+    background: none;
+}
 
 #cartButton {
     display: flex;
@@ -153,6 +218,42 @@ label > input[type="checkbox"] {
 
 #cartButton:hover {
     background-color: #444;
+}
+
+#cartItems {
+    list-style-position: inside; /* Ensures bullet points stay inside the container */    
+}
+
+#cartItems li {
+    padding-left: 10px; /* Adds more space between bullet points and text */
+}
+
+/* Ensure total price and checkout button are aligned properly */
+.cart-footer {
+    display: flex;
+    justify-content: space-between; /* Push total left, checkout right */
+    align-items: center;
+    width: 100%;
+    padding-top: 10px;
+}
+
+/* Adjust total price alignment */
+#totalPrice {
+    font-weight: bold;
+    flex-grow: 1; /* Pushes total to the left */
+    margin-right: 10px;
+}
+
+/* Style the checkout button */
+#checkoutButton {
+    background-color: black;
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    text-align: right;
 }
 
 button.delete-button {

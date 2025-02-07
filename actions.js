@@ -10,33 +10,39 @@ const sectionNameMap = {
 };
 
 function toggleCartDisplay() {
-    const cartElement = document.getElementById('cart');
+    const cartElement = document.getElementById("cart");
 
-    // ✅ Toggle visibility
-    if (cartElement.style.display === 'none' || cartElement.style.display === '') {
-        cartElement.style.display = 'block';
-        document.addEventListener('click', closeCartOnClickOutside); //  Listen for outside clicks
+    if (!cartElement) {
+        console.error("❌ Cart element not found!");
+        return;
+    }
+
+    cartElement.classList.toggle("show"); // Toggle cart visibility
+
+    // Close cart if clicking outside, but not if clicking inside or on delete button
+    document.addEventListener("click", function (event) {
+        if (
+            !cartElement.contains(event.target) && 
+            event.target !== document.getElementById("cartButton") &&
+            !event.target.closest('.delete-button') // ✅ Prevents cart from closing when clicking delete
+        ) {
+            cartElement.classList.remove("show");
+        }
+    });
+}
+
+// ✅ Close cart when clicking the "X" button
+document.addEventListener("DOMContentLoaded", function () {
+    const closeCartButton = document.getElementById("closeCart");
+    if (closeCartButton) {
+        closeCartButton.addEventListener("click", function () {
+            document.getElementById("cart").classList.remove("show");
+        });
     } else {
-        cartElement.style.display = 'none';
-        document.removeEventListener('click', closeCartOnClickOutside); //  Remove event listener
+        console.warn("⚠️ Close Cart button not found!");
     }
-}
+});
 
-function closeCartOnClickOutside(event) {
-    const cartElement = document.getElementById('cart');
-    const cartButton = document.getElementById('cartButton');
-
-    // ✅ Check if the click is on the delete button
-    if (event.target.closest('.delete-button')) {
-        return; // Ignore clicks on delete buttons
-    }
-
-    // ✅ Check if click is outside the cart and not on the cart button
-    if (!cartElement.contains(event.target) && event.target !== cartButton) {
-        cartElement.style.display = 'none';
-        document.removeEventListener('click', closeCartOnClickOutside);
-    }
-}
 
 
 //  Function to load cart items from localStorage
@@ -99,16 +105,22 @@ function renderCartItems() {
     const cartItems = document.getElementById('cartItems');
     const totalPrice = document.getElementById('totalPrice');
 
-    // ✅ Check if elements exist before updating
+    // Check if elements exist before running the function
     if (!cartItems || !totalPrice) {
-        console.error("❌ Error: Cart elements not found on the page.");
+        console.warn("⚠️ Cart elements not found. Skipping renderCartItems().");
         return;
     }
-    
+
     cartItems.innerHTML = ''; 
     let total = 0;
-
     let cart = JSON.parse(localStorage.getItem('cart')) || []; // Load updated cart from storage
+
+    if (cart.length === 0) {
+        // ✅ Show empty cart message if no items
+        cartItems.innerHTML = `<p class="empty-cart-message">Your cart is empty.</p>`;
+        totalPrice.textContent = `Estimated Total: $0.00`;
+        return;
+    }
 
     cart.forEach(item => {
         const itemNode = document.createElement('li');
@@ -121,17 +133,16 @@ function renderCartItems() {
             removeFromCart(item.id); 
         };
         deleteButton.className = 'delete-button';
-        
+
         itemNode.appendChild(deleteButton);
         cartItems.appendChild(itemNode);
-        
+
         total += item.price * item.quantity;
     });
 
     // Update total price
-    totalPrice.textContent = `Total: $${total.toFixed(2)}`;
+    totalPrice.textContent = `Estimated Total: $${total.toFixed(2)}`;
 }
-
 
 function removeFromCart(itemId) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -154,7 +165,6 @@ function loadCartFromLocalStorage() {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     renderCartItems();
 }
-
 
 // Display order summary on the checkout page
 function displayOrderSummary() {
@@ -193,7 +203,7 @@ function displayOrderSummary() {
 
     const totalElement = document.createElement('div');
     totalElement.id = 'orderTotal'; // Give the total div a unique ID
-    totalElement.textContent = `Estimated Total:$S${total.toFixed(2)}`;
+    totalElement.textContent = `Estimated Total:$${total.toFixed(2)}`;
     orderSummaryDiv.appendChild(totalElement);
 }
 
@@ -286,46 +296,106 @@ async function placeOrder() {
     }
 }
 
-
-async function uploadImage() {
+async function uploadImages() {
     const fileInput = document.getElementById('imageUpload');
-    const file = fileInput.files[0];
+    const preview = document.getElementById("preview");
+    const uploadedImageUrls = document.getElementById('uploadedImageUrls');
+    const uploadStatus = document.getElementById("uploadStatus"); // Display upload messages
 
-    if (!file) {
-        alert("Please select an image to upload.");
+    const files = fileInput.files;
+    if (!files.length) {
+        alert("Please select at least one image to upload.");
         return;
     }
 
-    const formData = new FormData();
-    formData.append("image", file);
-
-    const IMGUR_CLIENT_ID = "dc57a895f590af6"; // 🔹 Replace with your Imgur Client ID
+    const IMGUR_CLIENT_ID = "dc57a895f590af6"; // Replace with your Imgur Client ID
     const IMGUR_UPLOAD_URL = "https://api.imgur.com/3/image";
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
-    try {
-        const response = await fetch(IMGUR_UPLOAD_URL, {
-            method: "POST",
-            headers: {
-                "Authorization": `Client-ID ${IMGUR_CLIENT_ID}`
-            },
-            body: formData
-        });
+    let existingUrls = uploadedImageUrls.value ? uploadedImageUrls.value.split(",") : [];
+    let newUrls = [];
 
-        const result = await response.json();
+    // Keep track of already displayed images to prevent duplication
+    let existingPreviewImages = new Set();
+    preview.querySelectorAll("img").forEach(img => existingPreviewImages.add(img.src));
 
-        if (result.success) {
-            console.log("✅ Image uploaded successfully:", result.data.link);
-            document.getElementById('uploadedImageUrl').value = result.data.link; // Store image URL
-        } else {
-            console.error("❌ Upload failed:", result);
-            alert("Image upload failed. Try again.");
+    uploadStatus.innerHTML = ""; // Clear previous upload messages
+
+    for (let i = 0; i < files.length; i++) {
+        let file = files[i];
+
+        // Validate file type
+        if (!validTypes.includes(file.type)) {
+            alert(`Invalid file type: ${file.name}. Only JPG, PNG, and GIF are allowed.`);
+            continue;
         }
-    } catch (error) {
-        console.error("❌ Upload error:", error);
-        alert("Image upload error.");
-    }
-}
 
+        // Display selected image immediately before upload
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            if (!existingPreviewImages.has(e.target.result)) {
+                let imgElement = document.createElement("img");
+                imgElement.src = e.target.result;
+                imgElement.alt = file.name; // Display filename as alt text
+                imgElement.style.maxWidth = "150px";
+                imgElement.style.maxHeight = "150px";
+                imgElement.style.margin = "5px";
+                imgElement.style.borderRadius = "10px";
+                preview.appendChild(imgElement);
+
+                existingPreviewImages.add(e.target.result);
+            }
+        };
+        reader.readAsDataURL(file); // Read the file as a Data URL
+
+        //  Upload to Imgur in the background
+        const formData = new FormData();
+        formData.append("image", file);
+
+        try {
+            const response = await fetch(IMGUR_UPLOAD_URL, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Client-ID ${IMGUR_CLIENT_ID}`
+                },
+                body: formData
+            });
+
+            if (!response.ok) {
+                console.error(`❌ Imgur API Error: ${response.status} ${response.statusText}`);
+                if (response.status === 503) {
+                    alert(`Imgur is currently down. Please try again later.`);
+                    return;
+                }
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                let imgUrl = result.data.link;
+                newUrls.push(imgUrl);
+                console.log(`✅ Image uploaded successfully: ${file.name} (${imgUrl})`);
+
+                // Show success message with filename
+                let successMessage = document.createElement("p");
+                successMessage.textContent = `✅ Uploaded: ${file.name}`;
+                successMessage.style.color = "green";
+                successMessage.style.margin = "5px 0";
+                uploadStatus.appendChild(successMessage);
+
+            } else {
+                console.error("❌ Upload failed:", result);
+                alert(`Image upload failed for ${file.name}. Try again.`);
+            }
+        } catch (error) {
+            console.error("❌ Upload error:", error);
+            alert(`Image upload error for ${file.name}.`);
+        }
+    }
+
+    // Keep previous images and append new ones without duplication
+    uploadedImageUrls.value = [...new Set([...existingUrls, ...newUrls])].join(",");
+}
 
 // Event listeners for the DOM
 document.addEventListener('DOMContentLoaded', function() {
@@ -363,6 +433,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+let lastScrollY = window.scrollY;
+const header = document.getElementById("header-container");
+const headerHeight = header.offsetHeight; // Get the actual header height
+let isScrollingDown = false;
+
+window.addEventListener("scroll", () => {
+    let currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        // Scroll Down: Hide Header Fully
+        if (!isScrollingDown) {
+            header.style.top = `-${headerHeight}px`; // Move header completely off-screen
+            isScrollingDown = true;
+        }
+    } else {
+        // Scroll Up: Show Header
+        if (isScrollingDown) {
+            header.style.top = "0"; // Bring header back
+            isScrollingDown = false;
+        }
+    }
+
+    lastScrollY = currentScrollY;
+});
+
+
 
 
 

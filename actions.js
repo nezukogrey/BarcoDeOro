@@ -15,10 +15,10 @@ function toggleCartDisplay() {
     // ✅ Toggle visibility
     if (cartElement.style.display === 'none' || cartElement.style.display === '') {
         cartElement.style.display = 'block';
-        document.addEventListener('click', closeCartOnClickOutside); // ✅ Listen for outside clicks
+        document.addEventListener('click', closeCartOnClickOutside); //  Listen for outside clicks
     } else {
         cartElement.style.display = 'none';
-        document.removeEventListener('click', closeCartOnClickOutside); // ✅ Remove event listener
+        document.removeEventListener('click', closeCartOnClickOutside); //  Remove event listener
     }
 }
 
@@ -98,6 +98,12 @@ function addToCartFromSection(sectionId) {
 function renderCartItems() {
     const cartItems = document.getElementById('cartItems');
     const totalPrice = document.getElementById('totalPrice');
+
+    // ✅ Check if elements exist before updating
+    if (!cartItems || !totalPrice) {
+        console.error("❌ Error: Cart elements not found on the page.");
+        return;
+    }
     
     cartItems.innerHTML = ''; 
     let total = 0;
@@ -230,7 +236,7 @@ async function placeOrder() {
     const orderNumber = 'ORD' + Math.floor(Math.random() * 1000000);
     document.getElementById('orderNumber').textContent = orderNumber;
 
-    const FORMSPREE_URL = "https://formspree.io/f/mdkazybk"; // Replace with your Formspree ID
+    const FORMSPREE_URL = "https://formspree.io/f/mjkgrljl"; // Replace with your Formspree ID
 
     const formData = {
         name: name,

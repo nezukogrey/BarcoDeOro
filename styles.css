@@ -218,7 +218,7 @@ label > input[type="checkbox"] {
 
 .close-cart {
     position: absolute;
-    right: 15px; /* Moves it to the right */
+    right: 1px; /* Moves it to the right */
     top: 15px;
     font-size: 20px;
     color: black; /* Change to black or any visible color */

@@ -22,16 +22,6 @@
         font-size: 14px;
         padding: 8px;
     }
-    .close-cart {
-        font-size: 20px;
-        top: 10px;
-        right: 10px;
-    }
-
-    .cart-container {
-        width: 100%; /* Takes full screen width */
-        max-width: 100%;
-    }
 }
 
 @media (max-width: 400px) {
@@ -39,16 +29,6 @@
         max-width: 120px; /* Shrinks even more for extra small screens */
         font-size: 12px;
         padding: 6px;
-    }
-    .close-cart {
-        font-size: 20px;
-        top: 10px;
-        right: 10px;
-    }
-
-    .cart-container {
-        width: 100%; /* Takes full screen width */
-        max-width: 100%;
     }
 }
 
@@ -68,7 +48,7 @@ body {
     background-color: #fffef0; /* A light cream background */
     color: #333; /* Dark grey text for readability */
     line-height: 1.6;
-    padding: 20px;
+    padding-top: 190px;
 }
 
 header, footer {
@@ -80,12 +60,15 @@ header, footer {
 /* Make the entire header flexbox for alignment */
 #header-container {
     position: fixed;
-    top: 0;
+    top: 0; /* Keep at the very top */
     left: 0;
     width: 100%;
+    background: #fffef0;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    transition: top 0.4s ease-in-out;
     z-index: 1000;
-    background-color: #fffef0;
-    transition: top 0.3s ease-in-out; /* Smooth movement */
 }
 
 /* Center logo and text */
@@ -197,7 +180,7 @@ label > input[type="checkbox"] {
 }
 
 /* Cart */
-.cart-container {
+#cart {
     position: fixed;
     top: 0;
     right: -350px; /* Start hidden */
@@ -211,27 +194,44 @@ label > input[type="checkbox"] {
     z-index: 1000;
 }
 
-.cart-container.show {
+#cart.show {
     right: 0; /* Slide in */
 }
 
-
-.close-cart {
-    position: absolute;
-    right: 1px; /* Moves it to the right */
-    top: 15px;
-    font-size: 20px;
-    color: black; /* Change to black or any visible color */
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: color 0.2s ease-in-out;
+/* Ensure total price and checkout button are aligned properly */
+.cart-header {
+    display: flex;
+    justify-content: space-between; /* Push total left, checkout right */
+    align-items: center;
+    width: 100%;
+    padding-top: 10px;
 }
 
-.close-cart:hover {
-    color: red; /* Change color on hover for better UX */
-    background: none;
+/* Adjust total price alignment */
+#yourCart {
+    font-size: 30px;
+    font-weight: bold;
+    flex-grow: 1; /* Pushes total to the left */
+    margin-right: 10px;
+}
+
+/* Style the checkout button */
+#closeCart {
+    text-align: right;
+    float: right;
+    background-color: white;
+    color: black;
+    padding: 8px 15px;
+    text-decoration: none;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    width: auto;
+    cursor: pointer;
+}
+#closeCart:hover {
+    background-color: red;
 }
 
 #cartButton {
@@ -267,29 +267,6 @@ label > input[type="checkbox"] {
     padding-left: 10px; /* Adds more space between bullet points and text */
 }
 
-#cartItems li {
-    display: flex; /* ✅ Ensures text and button stay in one row */
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap; /* ✅ Prevents wrapping on smaller screens */
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 16px;
-    white-space: nowrap; /* ✅ Prevents text from breaking */
-}
-
-.delete-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: red; /* ✅ Keeps delete button red */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    margin-left: 10px; /* ✅ Adds spacing between text and button */
-}
 /* Ensure total price and checkout button are aligned properly */
 .cart-footer {
     display: flex;
@@ -307,20 +284,21 @@ label > input[type="checkbox"] {
 }
 
 /* Style the checkout button */
-.checkout-button {
-    display: block;
-    width: 100%; /* ✅ Makes it responsive */
-    max-width: 200px; /* ✅ Ensures it doesn't get too large */
-    padding: 10px;
-    font-size: 16px;
-    text-align: center;
+#checkoutButton {
     background-color: black;
     color: white;
-    border: none;
+    padding: 8px 15px;
+    text-decoration: none;
     border-radius: 5px;
+    border: none;
+    width: auto;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
+    text-align: right;
 }
+#checkoutButton:hover {
+    background-color: green;
+}
+
 button.delete-button {
     background: none;
     border: none;

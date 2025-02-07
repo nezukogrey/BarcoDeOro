@@ -29,15 +29,16 @@
     </header>
     
     
-    <div id="cart" class="cart-container">
-        <button id="closeCart" class="close-cart">X</button>  <!-- ✖ Close button -->
-        <h2>Your Cart</h2>
+    <div id="cart">
+        <div class="cart-container"> 
+        <button id="closeCart">X</button>  <!-- ✖ Close button -->
+        <p><span id="yourCart">Your Cart</span></p>
         <ul id="cartItems"></ul>
+        </div>
         <div class="cart-footer"> 
             <p><span id="totalPrice">Estimated Total: $0</span></p>
             <button id="checkoutButton" onclick="location.href='checkout.html'">Checkout</button>
         </div>
-        
     </div>
 
     <section id="messages">

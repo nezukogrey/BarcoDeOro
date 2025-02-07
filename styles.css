@@ -197,9 +197,9 @@ label > input[type="checkbox"] {
 
 .close-cart {
     position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
+    top: 15px;
+    right: 1px;
+    font-size: 20px;
     color: black; /* Change to black or any visible color */
     background: none;
     border: none;

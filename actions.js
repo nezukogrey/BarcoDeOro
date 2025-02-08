@@ -216,21 +216,32 @@ function displayOrderSummary() {
 
 //For Checkout.html 
 async function placeOrder() {
+    console.log("🟢 Starting order submission...");
+
     // Get input values
-    const name = document.getElementById('name').value.trim();
-    const address = document.getElementById('address').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const dateInput = document.getElementById('date').value;
-    const today = new Date().toISOString().split("T")[0];
+    const name = document.getElementById('name')?.value.trim() || "";
+    const address = document.getElementById('address')?.value.trim() || "";
+    const email = document.getElementById('email')?.value.trim() || "";
+    const phone = document.getElementById('phone')?.value.trim() || "";
+    const dateInput = document.getElementById('date')?.value || "";
     const orderSummary = document.getElementById('orderSummary')?.innerText || "";
     const orderNotes = document.getElementById('orderDescription')?.value || "";
-    const uploadedImageUrl = document.getElementById('uploadedImageUrl')?.value || ""; 
+    const uploadedImageUrls = document.getElementById('uploadedImageUrls')?.value || "";
 
-    // Check for empty fields before submitting
-    if (!name || !address || !email || !phone) {
+    console.log("📦 Order Details:");
+    console.log("👤 Name:", name);
+    console.log("🏠 Address:", address);
+    console.log("📧 Email:", email);
+    console.log("📞 Phone:", phone);
+    console.log("📆 Date:", dateInput);
+    console.log("🛍 Order Summary:", orderSummary);
+    console.log("📝 Notes:", orderNotes);
+    console.log("🖼 Image URLs:", uploadedImageUrls);
+
+    if (!name || !address || !email || !phone || !dateInput) {
+        console.error("⚠️ Missing required fields! Order will not be submitted.");
         alert("⚠️ Please fill in all required fields: Name, Address, Email, and Phone.");
-        return;  // Stop submission if any required field is empty
+        return;
     }
 
     // Validate phone number (must be 10 digits)
@@ -245,28 +256,35 @@ async function placeOrder() {
         return;
     }
 
+    // Ensure the date is not in the past
+    const today = new Date().toISOString().split("T")[0];
     if (dateInput < today) {
         alert("⚠️ You cannot select a past date. Please pick a valid date.");
-        return; // Stop submission
+        return;
     }
 
+    // Order Number
     const orderNumber = 'ORD' + Math.floor(Math.random() * 1000000);
     document.getElementById('orderNumber').textContent = orderNumber;
 
+    // Formspree Endpoint
     const FORMSPREE_URL = "https://formspree.io/f/mjkgrljl"; // Replace with your Formspree ID
 
+    // Prepare Data
     const formData = {
-        name: name,
-        address: address,
-        email: email,
-        phone: phone,
+        name,
+        address,
+        email,
+        phone,
         date: dateInput,
-        orderSummary: orderSummary,
-        orderNotes: orderNotes,
-        orderNumber: orderNumber,
-        imageURL: uploadedImageUrl
+        orderSummary,
+        orderNotes,
+        orderNumber,
+        imageURLs: uploadedImageUrls // Send image URLs correctly
     };
 
+    console.log("📤 Sending order to Formspree...");
+    
     try {
         const response = await fetch(FORMSPREE_URL, {
             method: "POST",
@@ -277,7 +295,7 @@ async function placeOrder() {
         });
 
         if (response.ok) {
-            console.log("Order sent to Formspree successfully!");
+            console.log("✅ Order sent to Formspree successfully!");
 
             // Hide all sections except the order confirmation
             document.getElementById('checkoutForm').style.display = 'none';
@@ -286,15 +304,15 @@ async function placeOrder() {
             document.getElementById('reviewOrder').style.display = 'none';
             document.getElementById('checkoutSection').style.display = 'none';
 
-            // Clear the uploaded image preview
-            document.getElementById('preview').innerHTML = '';  // Clears the preview area
-            document.getElementById('imageUpload').value = '';  // Clears the file input
-            document.getElementById('uploadedImageUrl').value = ''; // Clears stored image URL
+            // Clear uploaded images
+            document.getElementById('preview').innerHTML = ''; 
+            document.getElementById('imageUpload').value = '';  
+            document.getElementById('uploadedImageUrls').value = ''; 
 
-            // Show only the confirmation message
+            // Show confirmation
             document.getElementById('orderConfirmation').style.display = 'block';
         } else {
-            console.error("❌ Failed to send order:", response.statusText);
+            console.error("❌ Formspree submission failed:", response.statusText);
             alert("There was an error submitting your order. Please try again.");
         }
     } catch (error) {
